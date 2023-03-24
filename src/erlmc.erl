@@ -46,7 +46,7 @@
 %%--------------------------------------------------------------------
 start() -> start([{"localhost", 11211, 1}]).
 start(CacheServers) when is_list(CacheServers) ->
-	random:seed(now()),
+	rand:seed(now()),
 	case proc_lib:start(?MODULE, init, [self(), CacheServers], 5000) of
 		{ok, _Pid} -> ok;
 		Error -> Error
@@ -54,7 +54,7 @@ start(CacheServers) when is_list(CacheServers) ->
 	
 start_link() -> start_link([{"localhost", 11211, 1}]).
 start_link(CacheServers) when is_list(CacheServers) ->
-	random:seed(now()),
+	rand:seed(now()),
 	proc_lib:start_link(?MODULE, init, [self(), CacheServers], 5000).
 	
 add_server(Host, Port, PoolSize) ->
@@ -189,7 +189,7 @@ version() ->
 
 multi_call(Msg) ->
 	[begin
-		Pid = lists:nth(random:uniform(length(Pids)), Pids),
+		Pid = lists:nth(rand:uniform(length(Pids)), Pids),
 		{{Host, Port}, gen_server:call(Pid, Msg, ?TIMEOUT)}
 	end || {{Host, Port}, Pids} <- unique_connections()].
 
@@ -313,7 +313,7 @@ unique_connection(Host, Port) ->
     case ets:lookup(erlmc_connections, {Host, Port}) of
         [] -> exit({error, {connection_not_found, {Host, Port}}});
         Pids ->
-            {_, Pid} = lists:nth(random:uniform(length(Pids)), Pids),
+            {_, Pid} = lists:nth(rand:uniform(length(Pids)), Pids),
             Pid
     end.
 
