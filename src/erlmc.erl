@@ -46,7 +46,7 @@
 %%--------------------------------------------------------------------
 start() -> start([{"localhost", 11211, 1}]).
 start(CacheServers) when is_list(CacheServers) ->
-	rand:seed(now()),
+	rand:seed(erlang:timestamp()),
 	case proc_lib:start(?MODULE, init, [self(), CacheServers], 5000) of
 		{ok, _Pid} -> ok;
 		Error -> Error
@@ -54,7 +54,7 @@ start(CacheServers) when is_list(CacheServers) ->
 	
 start_link() -> start_link([{"localhost", 11211, 1}]).
 start_link(CacheServers) when is_list(CacheServers) ->
-	rand:seed(now()),
+	rand:seed(erlang:timestamp()),
 	proc_lib:start_link(?MODULE, init, [self(), CacheServers], 5000).
 	
 add_server(Host, Port, PoolSize) ->
